@@ -2,7 +2,7 @@
     "name": "m4ffucci/mikro",
     "description": "A PHP microservice ready for implementation",
     "type": "library",
-    "license": "Property",
+    "license": "MIT",
     "authors": [
         {
             "name": "Federico Maffucci",
