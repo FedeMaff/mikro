@@ -1,0 +1,10 @@
+MikroTest\Assets\Classes\FakeEntityUser:
+    exclusion_policy: all
+    relations:
+        -
+            rel: self
+            href: expr('/fakeusers/' ~ object.getId())
+    virtual_properties:
+        fullname:
+            exp: object.getName() ~ " " ~ object.getSurname()
+            type: string

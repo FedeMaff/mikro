@@ -1,0 +1,15 @@
+Exception:
+    exclusion_policy: all
+    virtual_properties:
+        type:
+            exp: ("about:blank")
+            type: string
+        title:
+            exp: ("Errore generico server")
+            type: string
+        status:
+            exp: object.getCode()
+            type: int
+        detail:
+            exp: object.getMessage()
+            type: string

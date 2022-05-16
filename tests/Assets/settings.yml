@@ -1,0 +1,154 @@
+# Nome servizio
+# ------------------------------------------------
+# Questa libreria è dedicata all'implementazione
+# di microservizi, pertanto si assume che ogni in-
+# stallazione implementi uno specifico dominio che
+# possa essere descritto da un nome.
+# In fase di parsing di questo file il nome del
+# servizio verrà recuperato, processato e validato
+# Solo i nomi che rispetteranno questo pattern
+# [A-Za-z]{1}[A-Za-z0-9]+ verranno ritenuti validi
+# In alternativa verrà immediatamente scatenata un
+# eccezione dedicata: ServiceNameException.
+# Nel caso in cui non venga implementato questo
+# file e/o non venga valorizzata la proprietà
+# serviceName, il sistema attribuirà il nome:
+# Mikro d'ufficio. :)
+# ------------------------------------------------
+serviceName: TestNomeServizio
+
+
+# Elenco NameSpace PSR-4
+# ------------------------------------------------
+# sotto i quali sono state implementate sottoclassi
+# dell'interfaccia: ControllerInterface
+# ------------------------------------------------
+controllersNameSpaces:
+    - Controller\001
+    - Controller\002
+
+
+# Elenco NameSpace PSR-4
+# ------------------------------------------------
+# sotto i quali sono state implementate sottoclassi
+# dell'interfaccia: ModelInterface
+# ------------------------------------------------
+modelsNameSpaces:
+    - Model\001
+    - Model\002
+
+
+# Elenco NameSpace PSR-4
+# ------------------------------------------------
+# sotto i quali sono state implementate sottoclassi
+# dell'interfaccia: RepositoryInterface
+# ------------------------------------------------
+repositoriesNameSpaces:
+    - Repo\001
+    - Repo\002
+
+
+# Elenco NameSpace PSR-4
+# ------------------------------------------------
+# sotto i quali sono state implementate sottoclassi
+# dell'interfaccia: ConsumerInterface
+# ------------------------------------------------
+consumersNameSpaces:
+    - Consumer\001
+    - Consumer\002
+
+
+# Elenco NameSpace PSR-4
+# ------------------------------------------------
+# sotto i quali sono state implementate sottoclassi
+# dell'interfaccia: PublisherInterface
+# ------------------------------------------------
+publishersNameSpaces:
+    - Publisher\001
+    - Publisher\002
+
+
+# Elenco file HATEOAS
+# ------------------------------------------------
+# L'HATEOAS è una fondamentale risorsa per rendere
+# i propri "response" REST oriented autodiscovery.
+# Per ogni elemento dell'elenco vanno specificate
+# 2 chiavi: prefix e dirPath.
+# Il prefix rappresenta il prefisso PSR-4
+# genitore dell'entità che state processando,
+# mentre la proprietà "dirPath" si riferisce al 
+# percorso fisico della cartella in cui inserirete
+# le varie annotazioni yml.
+# ------------------------------------------------
+hateoasYamlDirsPaths:
+    -
+        prefix: Percorso\NameSpace1\Prefisso
+        dirPath: hatoas/perocorso/directory
+    -
+        prefix: Percorso\NameSpace2\Prefisso
+        dirPath: hatoas/perocorso/directory
+
+
+# Tipologia di CASE da utilizzare nel repository:
+# ------------------------------------------------
+# camel: Tipologia di case "camelCase"
+# ------------------------------------------------
+# pascal: Tipologia di case "PascalCase"
+# ------------------------------------------------
+# snake: Tipologia di case "snake_case"
+# ------------------------------------------------
+# kebab: Tipologia di case "kebab-case"
+# ------------------------------------------------
+# default: Case impostato come costante
+# ------------------------------------------------
+repositoryFieldCase: kebab
+
+
+# Cache:
+# ------------------------------------------------
+# Questa libreria utilizza sistemi di fetch di va-
+# ri file, eseguire "n" volte queste attività
+# risulta oneroso specialmente in termini di
+# velocità. Per ovviare a letture ricorsive si ren-
+# de necessario utilizzare un sistema di cache.
+# Esite un semplice sistema di caching built-in
+# per la gestione di queste semplici cache.
+# Tuttavia in presenza di altri sistemi di cache è
+# sufficiente implementare concretamente l'inter-
+# faccia "CacheInterface" di questa libreria adat-
+# tando la libreria a voi più congeniale e inseri-
+# re in questa prorpietà il path dell'implementa-
+# zione concreta.
+# Se invece si sceglie di adottare l'implementa-
+# zione built-in è possibile impostare anche una
+# cartella "custom" per la scrittura dei file di
+# cache. Se non viene impostata la directory sarà
+# all'interno della directory cache della libreria
+#
+# N.B. Rimuovendo questa proprietà la cache è di-
+# sabilitata.
+#
+# N.B. Per attivare la cache built-in è necessario
+# valorizzare questa proprietà con "system"
+# ------------------------------------------------
+cache: system
+
+
+# Cartella di riferimento Cache:
+# ------------------------------------------------
+# Solo quando la proprietà "cache" è valorizzata
+# con "system" è possibile specificare qui
+# il percorso della directory in cui desideriamo
+# vengano scritti i file di cache.
+#
+# Nel caso in cui non venga inserita questa pro-
+# prietà o non venga specificata una cartella
+# custom in cui archiviare i file cache built-in
+# i file di cache verranno archiviati nella car-
+# tella "cache/" della libreria.
+#
+# Valorizzando questa proprietà con "default" il
+# sistema imposterà la cartella di cache come defi
+# nita dalla costante DEFAULT_CACHE_DIR.
+# ------------------------------------------------
+cacheDir: default

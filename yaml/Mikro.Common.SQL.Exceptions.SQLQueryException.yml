@@ -1,0 +1,20 @@
+Mikro\Common\SQL\Exceptions\SQLQueryException:
+    exclusion_policy: all
+    virtual_properties:
+        type:
+            exp: object.getType()
+            type: string
+        title:
+            exp: object.getTitle()
+            type: string
+        status:
+            exp: object.getCode()
+            type: int
+        detail:
+            exp: object.getMessage()
+            type: string
+        query:
+            exp: object.getQuery()
+        queryParams:
+            exp: object.getQueryParams()
+            skip_when_empty: true

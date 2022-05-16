@@ -1,0 +1,64 @@
+<?php
+    
+    # ==============================================================
+    # Esempio di implementazione Consumer AMQP. In questo esempio
+    # utilizzeremo un'implementazione concreta ( demo ) di RabbitMQ.
+    # ==============================================================
+
+    # ==============================================================
+    # 1) Creare cartella Consumer: '/src/Consumers'
+    # ==============================================================
+    
+    # ==============================================================
+    # 2) Integrare il NameSpace psr-4 corrispondente:
+    # ==============================================================
+    #
+    #    file: /composer.json
+    #    ...
+    #    "MyService\\" : "src/"
+    #    ...
+    #
+    #    Il path da impostare nei ConsumersNameSpaces sarà 'MyService\Consumers'
+    #    Mikro\Settings::addConsumersNameSpace('MyService\Consumers');
+
+    # ==============================================================
+    # 3) Implementa un consumer:
+    # ==============================================================
+    #
+    #    file: '/src/Consumers/MyConsumerClass.php'
+    #
+    #    <?php
+    #
+    #        namespace MyService\Consumers;
+    #
+    #        use Mikro\Adapter\Event\RabbitMQ\Consumer as RabbitMQConsumer;
+    #        use Mikro\Common\AMQP\Connection\ConnectionInterface;
+    #        use PhpAmqpLib\Channel\AMQPChannel;
+    #        use PhpAmqpLib\Exchange\AMQPExchangeType;
+    #
+    #        class MyConsumerClass extends RabbitMQConsumer
+    #        {
+    #            public function __construct(ConnectionInterface $conn)
+    #            {
+    #                parent::__construct($conn, 'NomeDellaMiaCoda');
+    #            }
+    #
+    #            protected function channelSettings(AMQPChannel $channel): void
+    #            {
+    #                $exchangeName = 'NomeDellExcangeDaCuiRicevereMessaggi';
+    #                $channel->exchange_declare($exchangeName, AMQPExchangeType::TOPIC, false, false, false);
+    #                $channel->queue_declare($this->queueName, false, false, false, false);
+    #                $channel->queue_bind($this->queueName, $exchangeName, 'routing.key.di.lettura.*');
+    #            }
+    #        }
+
+    # ==============================================================
+    # 4) Creazione file con bootstrap
+    # ==============================================================
+    #
+    #    file: /consumer.php
+
+    include(__DIR__  . "/conf.php");
+    use Mikro\Factory\ConsumerFactory;    
+    ConsumerFactory::create('MyConsumerClass')->consume();
+?>
