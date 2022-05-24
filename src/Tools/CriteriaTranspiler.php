@@ -126,11 +126,14 @@ class CriteriaTranspiler
      */
     public function buildCriteria(): CriteriaInterface
     {
-
-        $filters = isset($this->array[FILTERS_KEY]) ? $this->parseFilters($this->array[FILTERS_KEY]) : null;
-        $pagination = isset($this->array[PAGINATION_KEY]) ? $this->parsePagination($this->array[PAGINATION_KEY]) : null;
-        $sortings = isset($this->array[SORTINGS_KEY]) ? $this->parseSortings($this->array[SORTINGS_KEY]) : [];
-        $fields = isset($this->array[FIELDS_KEY]) ? $this->parseFields($this->array[FIELDS_KEY]) : [];
+        $filters = isset($this->array[FILTERS_KEY]) ? $this->array[FILTERS_KEY] : null;
+        $filters = is_array($filters) ? $this->parseFilters($filters) : null;
+        $pagination = isset($this->array[PAGINATION_KEY]) ? $this->array[PAGINATION_KEY] : null;
+        $pagination = is_array($pagination) ? $this->parsePagination($pagination) : null;
+        $sortings = isset($this->array[SORTINGS_KEY]) ? $this->array[SORTINGS_KEY] : [];
+        $sortings = is_array($sortings) ? $this->parseSortings($sortings) : null;
+        $fields = isset($this->array[FIELDS_KEY]) ? $this->array[FIELDS_KEY] : [];
+        $fields = is_array($fields) ? $this->parseFields($fields) : null;
         return new Criteria($filters, $pagination, $sortings, $fields);
     }
 
