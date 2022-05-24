@@ -15,6 +15,7 @@ namespace Mikro\Response;
 
 use Mikro\Response\FormattableHttpResponseAbstract;
 use Mikro\Response\Formatter\FormatterInterface;
+use Mikro\Tools\OutputDecorator;
 use Exception;
 
 /**
@@ -52,7 +53,8 @@ class ExceptionHttpResponse extends FormattableHttpResponseAbstract
      */
     public function __toString(): string
     {
-        return $this->formatter->exceptionToString($this->exception);
+        $string = $this->formatter->exceptionToString($this->exception);
+        return OutputDecorator::decorate($string);
     }
 
     /**

@@ -449,3 +449,36 @@ defined('EVENT_ID_LENGTH') or define("EVENT_ID_LENGTH", 32);
  * @var string READONLY_PROPERTY Nota PSR12 rende una proprietà di sola lettura
  */
 defined('READONLY_PROPERTY') or define("READONLY_PROPERTY", '@global readonly');
+
+/**
+ * Questa costante permette di attivare o disabilitare la "decorazione" dell'output.
+ * Se la costante DECORATE_OUTPUT viene impostata a false le funzionalità di replace
+ * contenute nella classe Mikro\Tools\OutputDecorator non verranno eseguite.
+ *
+ * @var string DECORATE_OUTPUT Flag attivazione / disattivazione decoratore output
+ */
+defined('DECORATE_OUTPUT') or define("DECORATE_OUTPUT", true);
+
+/**
+ * L'output dei controller è un oggetto Response. Questo oggetto response è di tipo
+ * "stringable" e spesso la sua rappresentazione è STRINGA. I response passano dalle
+ * logiche più profonde di Mikro e spesso può essere complesso dinamicizzare alcuni
+ * aspetti importanti specialmente in ambito relazioni HAETOAS. Questa costante rap
+ * presenta il prefisso di un selettore di una proprietà placeholder nell'output
+ * stringa di un response.
+ *
+ * @var string DECORATOR_PREFIX Stringa prefisso selettori placeholder output 
+ */
+defined('DECORATOR_PREFIX') or define("DECORATOR_PREFIX", '{');
+
+/**
+ * L'output dei controller è un oggetto Response. Questo oggetto response è di tipo
+ * "stringable" e spesso la sua rappresentazione è STRINGA. I response passano dalle
+ * logiche più profonde di Mikro e spesso può essere complesso dinamicizzare alcuni
+ * aspetti importanti specialmente in ambito relazioni HAETOAS. Questa costante rap
+ * presenta il suffisso di un selettore di una proprietà placeholder nell'output
+ * stringa di un response.
+ *
+ * @var string DECORATOR_SUFFIX Stringa suffisso selettori placeholder output 
+ */
+defined('DECORATOR_SUFFIX') or define("DECORATOR_SUFFIX", '}');

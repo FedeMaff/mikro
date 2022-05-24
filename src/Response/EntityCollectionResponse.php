@@ -16,6 +16,7 @@ namespace Mikro\Response;
 use Mikro\Response\FormattableResponseAbstract;
 use Mikro\Response\Formatter\FormatterInterface;
 use Mikro\EntityCollection\EntityCollectionInterface;
+use Mikro\Tools\OutputDecorator;
 
 /**
  * Implementazione concreta risposta HTTP di un Oggetto Entità
@@ -52,6 +53,7 @@ class EntityCollectionResponse extends FormattableResponseAbstract
      */
     public function __toString(): string
     {
-        return $this->formatter->entityCollectionToString($this->collection);
+        $string = $this->formatter->entityCollectionToString($this->collection);
+        return OutputDecorator::decorate($string);
     }
 }

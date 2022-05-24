@@ -14,6 +14,7 @@
 namespace Mikro\Response;
 
 use Mikro\Response\HttpResponseAbstract;
+use Mikro\Tools\OutputDecorator;
 
 /**
  * Implementazione concreta risposta HTTP formato stringa
@@ -50,7 +51,7 @@ class StringHttpResponse extends HttpResponseAbstract
      */
     public function __toString(): string
     {
-        return $this->string;
+        return OutputDecorator::decorate($this->string);
     }
 
     /**

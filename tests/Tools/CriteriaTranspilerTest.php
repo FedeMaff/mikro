@@ -1,8 +1,6 @@
 <?php
 
 namespace MikroTest\Tools;
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
 
 use PHPUnit\Framework\TestCase;
 use Mikro\Tools\CriteriaTranspiler;

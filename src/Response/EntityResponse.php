@@ -16,6 +16,7 @@ namespace Mikro\Response;
 use Mikro\Response\FormattableResponseAbstract;
 use Mikro\Response\Formatter\FormatterInterface;
 use Mikro\Entity\EntityInterface;
+use Mikro\Tools\OutputDecorator;
 
 /**
  * Implementazione concreta risposta formato Oggetto Entità
@@ -52,6 +53,7 @@ class EntityResponse extends FormattableResponseAbstract
      */
     public function __toString(): string
     {
-        return $this->formatter->entityToString($this->entity);
+        $string = $this->formatter->entityToString($this->entity);
+        return OutputDecorator::decorate($string);
     }
 }

@@ -15,6 +15,7 @@ namespace Mikro\Response;
 
 use Mikro\Response\FormattableHttpResponseAbstract;
 use Mikro\Response\Formatter\FormatterInterface;
+use Mikro\Tools\OutputDecorator;
 
 /**
  * Implementazione concreta risposta HTTP di un Oggetto generico
@@ -52,6 +53,7 @@ class ObjectHttpResponse extends FormattableHttpResponseAbstract
      */
     public function __toString(): string
     {
-        return $this->formatter->objectToString($this->object);
+        $string = $this->formatter->objectToString($this->object);
+        return OutputDecorator::decorate($string);
     }
 }

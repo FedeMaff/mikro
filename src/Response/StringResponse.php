@@ -14,6 +14,7 @@
 namespace Mikro\Response;
 
 use Mikro\Response\ResponseInterface;
+use Mikro\Tools\OutputDecorator;
 
 /**
  * Implementazione concreta risposta formato stringa
@@ -48,6 +49,6 @@ class StringResponse implements ResponseInterface
      */
     public function __toString(): string
     {
-        return $this->string;
+        return OutputDecorator::decorate($this->string);
     }
 }
