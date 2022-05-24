@@ -452,6 +452,9 @@ class CriteriaTranspiler
             }
             $readonly = isset($struct[$field]['readonly']) ? $struct[$field]['readonly'] : true;
             $struct = isset($struct[$field]['fields']) ? $struct[$field]['fields'] : [];
+            if ($readonly) {
+                return true;
+            }
         }
 
         return $readonly;

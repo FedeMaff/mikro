@@ -11,7 +11,7 @@ class FakeEntityUser implements EntityInterface
     private string $surname = '';
     private int $n = 0;
 
-    public function __construct(int $id, string $name, string $surname, int $n = 0)
+    public function __construct(int $id = 0, string $name = '', string $surname = '', int $n = 0)
     {
         $this->id = $id;
         $this->name = $name;

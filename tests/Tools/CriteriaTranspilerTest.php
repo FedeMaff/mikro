@@ -7,9 +7,27 @@ namespace MikroTest\Tools;
 use PHPUnit\Framework\TestCase;
 use Mikro\Tools\CriteriaTranspiler;
 use MikroTest\Assets\Classes\FakeEntityProduct;
+use MikroTest\Assets\Classes\FakeEntityPost;
 
 class CriteriaTranspilerTest extends TestCase
 {
+    public function testVariadicReadonly()
+    {
+        $array[FILTERS_KEY]['id'][OPERATOR_EQUAL] = 1;
+        $array[FILTERS_KEY]['user']['name'][OPERATOR_EQUAL] = "ciao";
+        $array[FIELDS_KEY]['user']['name'] = null;
+        $criteria = CriteriaTranspiler::transpile($array, new FakeEntityPost);
+        $this->assertInstanceOf('Mikro\Repository\Criteria\CriteriaInterface', $criteria);
+
+        $filters = $criteria->getFilters()->getFilters();
+        $this->assertEquals(1, count($filters));
+        $this->assertInstanceOf('Mikro\Repository\Criteria\Filter\IntFilter', reset($filters));
+
+        $fields = $criteria->getFields();
+        $this->assertEquals(1, count($fields));
+        $this->assertEquals(['name' => []], $fields['fakeEntityUser']);
+    }
+
     /**
      * Verifica creazione istanza criteri con filtri
      */
