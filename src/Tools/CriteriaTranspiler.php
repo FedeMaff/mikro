@@ -131,9 +131,9 @@ class CriteriaTranspiler
         $pagination = isset($this->array[PAGINATION_KEY]) ? $this->array[PAGINATION_KEY] : null;
         $pagination = is_array($pagination) ? $this->parsePagination($pagination) : null;
         $sortings = isset($this->array[SORTINGS_KEY]) ? $this->array[SORTINGS_KEY] : [];
-        $sortings = is_array($sortings) ? $this->parseSortings($sortings) : null;
+        $sortings = is_array($sortings) ? $this->parseSortings($sortings) : [];
         $fields = isset($this->array[FIELDS_KEY]) ? $this->array[FIELDS_KEY] : [];
-        $fields = is_array($fields) ? $this->parseFields($fields) : null;
+        $fields = is_array($fields) ? $this->parseFields($fields) : [];
         return new Criteria($filters, $pagination, $sortings, $fields);
     }
 
