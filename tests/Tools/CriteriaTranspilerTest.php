@@ -4,8 +4,25 @@ namespace MikroTest\Tools;
 
 use PHPUnit\Framework\TestCase;
 use Mikro\Tools\CriteriaTranspiler;
+use Mikro\Tools\CriteriaFormatter;
+use Mikro\Formatter\StringFormatterInterface;
 use MikroTest\Assets\Classes\FakeEntityProduct;
 use MikroTest\Assets\Classes\FakeEntityPost;
+
+class CambiaLaGconLaB implements StringFormatterInterface
+{
+    public function __invoke(?string $string): string { return str_replace('G', 'B', $string); }
+}
+
+class CambiaLaBconLaS implements StringFormatterInterface
+{
+    public function __invoke(?string $string): string { return str_replace('B', 'S', $string); }
+}
+
+class AggiungiUnUnderscoreAlFondo implements StringFormatterInterface
+{
+    public function __invoke(?string $string): string { return sprintf('%s_', $string); }
+}
 
 class CriteriaTranspilerTest extends TestCase
 {
@@ -165,5 +182,61 @@ class CriteriaTranspilerTest extends TestCase
         $this->assertEquals('fakeEntityShop.n', $filter2->getField());
         $this->assertEquals(OPERATOR_LESS_THAN_OR_EQUAL, $filter2->getOperator());
         $this->assertEquals(100, $filter2->getValue());
+    }
+
+    /**
+     * Verifica utilizzo di formattatori di stringhe in fase di traspilazione criteri
+     */
+    public function testFormatter()
+    {
+        $array[FILTERS_KEY]['category']['name'][OPERATOR_EQUAL] = 'SGOMBRO';
+        $array[FILTERS_KEY]['price'][OPERATOR_LESS_THAN] = 10;
+        $array[FILTERS_KEY]['name'][OPERATOR_STARTS_WITH] = 'ipho';
+
+        $formatters = [];
+        $formatters[] = new CriteriaFormatter(new CambiaLaGconLaB, 'category.name');
+        $formatters[] = new CriteriaFormatter(new CambiaLaBconLaS, 'category.name');
+        $formatters[] = new CriteriaFormatter(new AggiungiUnUnderscoreAlFondo); // Filtro su tutte le stringhe
+
+        $criteria = CriteriaTranspiler::transpile($array, new FakeEntityProduct, ...$formatters);
+        $filters = $criteria->getFilters()->getFilters();
+
+        $this->assertEquals(3, count($filters));
+
+        $filter = $filters[0];
+        $this->assertEquals('fakeEntityCategory.name', $filter->getField());
+        $this->assertEquals(OPERATOR_EQUAL, $filter->getOperator());
+        $this->assertEquals('SSOMSRO_', $filter->getValue());
+        $filter = $filters[1];
+        $this->assertEquals('price', $filter->getField());
+        $this->assertEquals(OPERATOR_LESS_THAN, $filter->getOperator());
+        $this->assertEquals(10, $filter->getValue());
+        $filter = $filters[2];
+        $this->assertEquals('name', $filter->getField());
+        $this->assertEquals(OPERATOR_STARTS_WITH, $filter->getOperator());
+        $this->assertEquals('ipho_', $filter->getValue());
+    }
+
+    /**
+     * Verifica utilizzo di formattatori di stringhe su array
+     */
+    public function testFormatterOperatorIn()
+    {
+        $array[FILTERS_KEY]['category']['name'][OPERATOR_IN] = ['SGOMBRO', 12, 12.22, 'SERGNA', 'GINGER'];
+
+        $formatters = [];
+        $formatters[] = new CriteriaFormatter(new CambiaLaGconLaB, 'category.name');
+        $formatters[] = new CriteriaFormatter(new CambiaLaBconLaS, 'category.name');
+        $formatters[] = new CriteriaFormatter(new AggiungiUnUnderscoreAlFondo); // Filtro su tutte le stringhe
+
+        $criteria = CriteriaTranspiler::transpile($array, new FakeEntityProduct, ...$formatters);
+        $filters = $criteria->getFilters()->getFilters();
+
+        $this->assertEquals(1, count($filters));
+
+        $filter = $filters[0];
+        $this->assertEquals('fakeEntityCategory.name', $filter->getField());
+        $this->assertEquals(OPERATOR_IN, $filter->getOperator());
+        $this->assertEquals(['SSOMSRO_', '12_', '12.22_', 'SERSNA_', 'SINSER_'], $filter->getValue());
     }
 }

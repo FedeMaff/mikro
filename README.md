@@ -20,3 +20,13 @@ $ composer require m4ffucci/mikro
 
 ## Requests?
 The documentation is being drafted, for information and / or news you can write to me at m4ffucci@gmail.com
+
+
+## Dev
+By installing the DEV dependencies you can check the PSR12 encoding standard as well:
+
+$ ./vendor/bin/phpcs --standard=PSR12 ./src
+
+Or you can run the auto-fix like this:
+
+$ ./vendor/bin/phpcbf --standard=PSR12 ./src

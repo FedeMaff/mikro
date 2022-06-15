@@ -312,17 +312,20 @@ abstract class RepositoryAbstract implements RepositoryInterface
     {
         $keys = empty($fields) ? [] : array_keys($fields);
         $tableName = $this->tableName;
+        $wrappedTableName = $this->wrapInBackticks($this->tableName);
         $keys = array_map(function ($key) use ($tableName, $fields) {
-            return empty($fields[$key]) ? sprintf('%s.%s', $this->wrapInBackticks($this->tableName), $this->wrapInBackticks($key)) : null;
+            $wrappedKey = $this->wrapInBackticks($key);
+            return empty($fields[$key]) ? sprintf('%s.%s', $wrappedTableName, $wrappedKey) : null;
         }, $keys);
         $keys = array_filter($keys);
         if (!empty($keys)) {
             $fixedFields = $this->getFixedFields();
             foreach ($fixedFields as $fixedField) {
-                $keys[] = sprintf('%s.%s', $this->wrapInBackticks($this->tableName), $this->wrapInBackticks($this->fixedField));
+                $wrappedFixedField = $this->wrapInBackticks($this->fixedField);
+                $keys[] = sprintf('%s.%s', $wrappedTableName, $wrappedFixedField);
             }
         }
-        return empty($keys) ? sprintf('%s.*', $this->wrapInBackticks($this->tableName)) : implode(', ', $keys);
+        return empty($keys) ? sprintf('%s.*', $wrappedTableName) : implode(', ', $keys);
     }
 
     /**
@@ -422,12 +425,17 @@ abstract class RepositoryAbstract implements RepositoryInterface
                 continue;
             }
 
+            $wrappedJoinToTable = $this->wrapInBackticks($join->getToTable());
+            $wrappedJoinToField = $this->wrapInBackticks($join->getToField());
+            $wrappedJoinFromTable = $this->wrapInBackticks($join->getFromTable());
+            $wrappedJoinFromField = $this->wrapInBackticks($join->getFromField());
+
             $query[] = sprintf('%s JOIN', $joinType);
-            $query[] = sprintf('%s', $this->wrapInBackticks($join->getToTable()));
+            $query[] = sprintf('%s', $wrappedJoinToTable);
             $query[] = 'ON';
-            $query[] = sprintf('%s.%s', $this->wrapInBackticks($join->getFromTable()), $this->wrapInBackticks($join->getFromField()));
+            $query[] = sprintf('%s.%s', $wrappedJoinFromTable, $wrappedJoinFromField);
             $query[] = '=';
-            $query[] = sprintf('%s.%s', $this->wrapInBackticks($join->getToTable()), $this->wrapInBackticks($join->getToField()));
+            $query[] = sprintf('%s.%s', $wrappedJoinToTable, $wrappedJoinToField);
             $joins[] = implode(' ', $query);
             $query = null;
         }

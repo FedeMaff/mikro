@@ -27,6 +27,7 @@ use Mikro\Repository\Criteria\Sorting;
 use Mikro\Factory\FilterFactory;
 use Mikro\Factory\FiltersGroupFactory;
 use Mikro\Tools\CaseConverter;
+use Mikro\Tools\CriteriaFormatter;
 use Mikro\Settings;
 use ReflectionClass;
 use ReflectionProperty;
@@ -81,17 +82,26 @@ class CriteriaTranspiler
     private array $struct = [];
 
     /**
+     * Array di formattatori
+     *
+     * @var CriteriaFormatter[] $formatters Collezione di formattatori
+     */
+    private array $formatters = [];
+
+    /**
      * Costruttore
      *
      * @param array $array Array associativo multidimensionale
      * @param EntityInterface $entity Istanza entità
+     * @param CriteriaFormatter[] $formatters Collezione di formattatori
      *
      * @return CriteriaInterface
      */
-    public function __construct(array $array = [], array $struct = [])
+    public function __construct(array $array = [], array $struct = [], array $formatters = [])
     {
         $this->array = $array;
         $this->struct = $struct;
+        $this->formatters = $formatters;
     }
 
     /**
@@ -99,13 +109,15 @@ class CriteriaTranspiler
      *
      * @param array $array Array associativo multidimensionale
      * @param EntityInterface $entity Istanza entità
+     * @param CriteriaFormatter[] $formatters Collezione di formattatori
      *
      * @return CriteriaInterface
      */
-    public static function transpile(array $array, EntityInterface $entity): CriteriaInterface
-    {
-        // Recovery struttura entità ( Ricorsiva )
-        // $struct = static::parseEntity($entity);
+    public static function transpile(
+        array $array,
+        EntityInterface $entity,
+        CriteriaFormatter ...$formatters
+    ): CriteriaInterface {
 
         $cache = Settings::getCache();
         if (!is_null($cache)) {
@@ -116,7 +128,7 @@ class CriteriaTranspiler
         } else {
             $struct = self::parseEntity($entity);
         }
-        return (new self($array, $struct))->buildCriteria();
+        return (new self($array, $struct, $formatters))->buildCriteria();
     }
 
     /**
@@ -393,6 +405,19 @@ class CriteriaTranspiler
                     continue;
                 }
 
+                switch (true) {
+                    case gettype($value) === 'string':
+                        $value = $this->applyStringFormatters($fieldsChain, $value);
+                        break;
+                    case gettype($value) === 'array':
+                        foreach ($value as &$tmpValue) {
+                            if (gettype($tmpValue) === 'string') {
+                                $tmpValue = $this->applyStringFormatters($fieldsChain, $tmpValue);
+                            }
+                        }
+                        break;
+                }
+
                 $tmpfield = $this->sanitizeFieldsChain($fieldsChain);
                 $filters[] = FilterFactory::create($tmpfield, $operator, $value);
                 continue;
@@ -461,6 +486,34 @@ class CriteriaTranspiler
         }
 
         return $readonly;
+    }
+
+    /**
+     * Applicazione formattatori di stringa
+     * Questo metodo verifica se tra i formatters d'istanza sono presenti dei formattatori
+     * che rispondo alla stringa $fieldsChain se l'esito è affermativo vengono eseguiti
+     * i formattatori sulla stringa e restitutita la stringa risultante. In caso contrario
+     * viene ritornata la stringa in ingresso.
+     *
+     * @param string $fieldsChain Percorso field generato dai parametri di richiesta
+     * @param string $string Valore oggetto di formattazione
+     *
+     * @return string
+     */
+    private function applyStringFormatters(string $fieldsChain, string $string): string
+    {
+        if (empty($this->formatters)) {
+            return $string;
+        }
+
+        foreach ($this->formatters as $formatter) {
+            if (!in_array($formatter->getFieldsChain(), [$fieldsChain, '*'])) {
+                continue;
+            }
+            $string = $formatter($string);
+        }
+
+        return $string;
     }
 
     /**

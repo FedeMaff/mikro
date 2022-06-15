@@ -17,7 +17,8 @@
         "php": ">=7.4",
         "haydenpierce/class-finder": "^0.4.3",
         "willdurand/hateoas": "^3.7",
-        "symfony/yaml": "^5.4"
+        "symfony/yaml": "^5.4",
+        "firebase/php-jwt": "^6.2"
     },
     "autoload": {
         "psr-4": {
