@@ -87,7 +87,6 @@ class JWT
         } catch (\BeforeValidException $e) {
             self::throwBeforeValidException();
         } catch (\Exception $e) {
-            print_r($e->getMessage());
             self::throwInvalidException();
         }
 
