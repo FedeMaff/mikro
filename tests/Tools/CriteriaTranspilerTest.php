@@ -8,6 +8,7 @@ use Mikro\Tools\CriteriaFormatter;
 use Mikro\Formatter\StringFormatterInterface;
 use MikroTest\Assets\Classes\FakeEntityProduct;
 use MikroTest\Assets\Classes\FakeEntityPost;
+use MikroTest\Assets\Classes\FakeEntityMan;
 
 class CambiaLaGconLaB implements StringFormatterInterface
 {
@@ -238,5 +239,26 @@ class CriteriaTranspilerTest extends TestCase
         $this->assertEquals('fakeEntityCategory.name', $filter->getField());
         $this->assertEquals(OPERATOR_IN, $filter->getOperator());
         $this->assertEquals(['SSOMSRO_', '12_', '12.22_', 'SERSNA_', 'SINSER_'], $filter->getValue());
+    }
+
+    /**
+     * Verifica struttura in caso di entità che eredita da altra entità
+     */
+    public function testGetStructFromSubEntity()
+    {
+        $struct = CriteriaTranspiler::getStruct(new FakeEntityMan);
+        $this->assertCount(4, $struct);
+        $this->assertEquals('string', $struct['type']['type']);
+        $this->assertEquals('Type', $struct['type']['field']);
+        $this->assertEquals(false, $struct['type']['readonly']);
+        $this->assertEquals('int', $struct['id']['type']);
+        $this->assertEquals('Id', $struct['id']['field']);
+        $this->assertEquals(false, $struct['id']['readonly']);
+        $this->assertEquals('string', $struct['name']['type']);
+        $this->assertEquals('Name', $struct['name']['field']);
+        $this->assertEquals(false, $struct['name']['readonly']);
+        $this->assertEquals('string', $struct['surname']['type']);
+        $this->assertEquals('Surname', $struct['surname']['field']);
+        $this->assertEquals(false, $struct['surname']['readonly']);
     }
 }

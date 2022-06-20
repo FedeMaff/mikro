@@ -119,6 +119,19 @@ class CriteriaTranspiler
         CriteriaFormatter ...$formatters
     ): CriteriaInterface {
 
+        $struct = static::getStruct($entity);
+        return (new self($array, $struct, $formatters))->buildCriteria();
+    }
+
+    /**
+     * Estrazione proprietà e tipo proprietà in array associativo
+     *
+     * @param EntityInterface $entity Istanza entità
+     *
+     * @return array
+     */
+    public static function getStruct(EntityInterface $entity): array
+    {
         $cache = Settings::getCache();
         if (!is_null($cache)) {
             $reference = sprintf('parseEntity_%s', get_class($entity));
@@ -126,9 +139,9 @@ class CriteriaTranspiler
             $struct = is_null($content) ? static::parseEntity($entity) : unserialize($content);
             $content == null && $cache->write($reference, serialize($struct));
         } else {
-            $struct = self::parseEntity($entity);
+            $struct = static::parseEntity($entity);
         }
-        return (new self($array, $struct, $formatters))->buildCriteria();
+        return $struct;
     }
 
     /**
@@ -688,7 +701,8 @@ class CriteriaTranspiler
     {
         $readonly = null;
         $reflection = new ReflectionClass($entity);
-        foreach ($reflection->getProperties() as $property) {
+        $properties = self::getReflectionPropertiesRecursively($reflection);
+        foreach ($properties as $property) {
             if (strtolower($property->name) != strtolower($propertyName)) {
                 continue;
             }
@@ -697,6 +711,29 @@ class CriteriaTranspiler
             $readonly = strpos($comment, READONLY_PROPERTY) !== false ? true : false;
         }
         return is_null($readonly) ? true : $readonly;
+    }
+
+    /**
+     * Data un'istanza di classe reflection questo metodo estrae un array di proprietà
+     * ricorsivamente.
+     *
+     * Il metodo getProperties() lavora unicamente sull'implementazione della sottoclasse
+     * pertanto tutte le proprietà della/e superclassi vengono ignorate e non ritornano dalla
+     * funzione.
+     *
+     * @param ReflectionClass $class Istanza ReflectionClass
+     *
+     * @return array
+     */
+    private static function getReflectionPropertiesRecursively(ReflectionClass $class): array
+    {
+        $properties = $class->getProperties();
+        $parentClass = $class->getParentClass();
+        if (gettype($parentClass) == 'object') {
+                $parentProperties = self::getReflectionPropertiesRecursively($parentClass);
+                return array_merge($properties, $parentProperties);
+        }
+        return $properties;
     }
 
     /**

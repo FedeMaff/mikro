@@ -467,7 +467,7 @@ defined('DECORATE_OUTPUT') or define("DECORATE_OUTPUT", true);
  * presenta il prefisso di un selettore di una proprietà placeholder nell'output
  * stringa di un response.
  *
- * @var string DECORATOR_PREFIX Stringa prefisso selettori placeholder output 
+ * @var string DECORATOR_PREFIX Stringa prefisso selettori placeholder output
  */
 defined('DECORATOR_PREFIX') or define("DECORATOR_PREFIX", '{');
 
@@ -479,6 +479,6 @@ defined('DECORATOR_PREFIX') or define("DECORATOR_PREFIX", '{');
  * presenta il suffisso di un selettore di una proprietà placeholder nell'output
  * stringa di un response.
  *
- * @var string DECORATOR_SUFFIX Stringa suffisso selettori placeholder output 
+ * @var string DECORATOR_SUFFIX Stringa suffisso selettori placeholder output
  */
 defined('DECORATOR_SUFFIX') or define("DECORATOR_SUFFIX", '}');

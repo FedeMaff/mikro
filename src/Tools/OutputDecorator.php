@@ -24,13 +24,13 @@ namespace Mikro\Tools;
  * @author    Federico Maffucci <m4ffucci@gmail.com>
  */
 class OutputDecorator
-{   
+{
     /**
      * Metodo di parsificazione stringa di risposta
-     * 
+     *
      * @param ?string $string Stringa output response
-     * 
-     * @return ?string 
+     *
+     * @return ?string
      */
     public static function decorate(?string $string = null): ?string
     {
@@ -45,10 +45,10 @@ class OutputDecorator
 
     /**
      * Avvio sostituzione costanti utente
-     * 
+     *
      * @param string $string Stringa output response
-     * 
-     * @return string 
+     *
+     * @return string
      */
     protected static function decorateConstants(string $string): string
     {
@@ -65,7 +65,7 @@ class OutputDecorator
 
     /**
      * Trasformazione stringa nome proprietà in selettore nome proprietà
-     * 
+     *
      * @param string $propertyName Stringa contenente il nome di una proprietà
      */
     final protected static function toSelector(string $propertyName): string
